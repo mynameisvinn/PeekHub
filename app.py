@@ -28,16 +28,21 @@ def peek(src, dst, k):
 
 
 st.title("Peek")
+st.write('A no-fuss way to downsample datasets.')
 
-datasets = st.multiselect("Dataset", ['activeloop/mnist', 'activeloop/cifar10_train'])
+options = ['activeloop/mnist', 'activeloop/cifar10_train', "activeloop/cifar100_train", "activeloop/omniglot_test"]
+datasets = st.multiselect("Dataset", options)
 
-if datasets:    
-    tag = "mynameisvinn/{}".format(uuid.uuid1())
-    peek(src=datasets[0], dst=tag, k=0.02)
-    
-    st.write("Code snippet")
-    body = f"""
-        import hub            
-        ds = hub.load('{tag}')
-        """.format(tag)
-    st.code(body, language='python')
+if datasets:
+    subset = st.slider('Keep %', min_value=0.0, max_value=1.0, value=0.0, step=0.05)
+    if subset != 0:
+        st.write('Slicing', subset)
+        tag = "mynameisvinn/{}".format(uuid.uuid1())
+        peek(src=datasets[0], dst=tag, k=subset)
+        
+        st.write("Code snippet")
+        body = f"""
+            import hub            
+            ds = hub.load('{tag}')
+            """.format(tag)
+        st.code(body, language='python')
