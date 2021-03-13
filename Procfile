@@ -1,2 +1,1 @@
-
-web: sh setup.sh && streamlit run app_peek.py
+web: sh setup.sh && streamlit run app.py
