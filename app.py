@@ -28,7 +28,7 @@ def peek(src, dst, k):
 
 
 st.title("PeekHub")
-st.write("A no-fuss way to downsample datasets. We simplify out-of-core datasets so you don't have to.")
+st.write("A no-fuss way to downsample large, out-of-core datasets. We shrink datasets so you don't have to.")
 
 options = [
     'mnist', 
@@ -47,17 +47,22 @@ options = [
     'cars196_test',
     'eurosat_train',
     'coil100_train',
+    'the300w_lp_train',
     'caltech_birds2010_train',
-    'beans_train']
+    'beans_train',
+    'stl10_unlabelled',
+    'dtd_train',
+    'malaria_train']
 
 datasets = st.multiselect("Dataset", options)
 
 if datasets:
     subset = st.slider('Fraction to keep', min_value=0.0, max_value=1.0, value=0.0, step=0.05)
     if subset != 0:
+        selected_dataset = datasets[0]
         st.write('Slicing', subset)
-        tag = "mynameisvinn/{}-{}".format(uuid.uuid1(), subset)
-        d = 'activeloop/' + datasets[0]
+        tag = "mynameisvinn/{}-{}-{}".format(selected_dataset, uuid.uuid1(), subset)
+        d = f'activeloop/{selected_dataset}'
         if peek(src=d, dst=tag, k=subset):
             st.write("Code snippet")
             body = f"""
