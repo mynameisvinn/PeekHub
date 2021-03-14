@@ -27,28 +27,28 @@ def peek(src, dst, k):
 
 
 
-st.title("Peek")
-st.write('A no-fuss way to downsample datasets.')
+st.title("PeekHub")
+st.write("A no-fuss way to downsample datasets. We simplify out-of-core datasets so you don't have to.")
 
 options = [
-    'activeloop/mnist', 
-    'activeloop/cifar10_train', 
-    'activeloop/cifar100_train', 
-    'activeloop/omniglot_test',
-    'activeloop/objectron_camera',
-    'activeloop/lm1b',
-    'activeloop/twitter_airline',
-    'activeloop/CoLA',
-    'activeloop/dota',
-    'activeloop/kitti_train',
-    'activeloop/deep_weeds_train',
-    'activeloop/voc_2012_train',
-    'activeloop/food101_train',
-    'activeloop/cars196_test',
-    'activeloop/eurosat_train',
-    'activeloop/coil100_train',
-    'activeloop/caltech_birds2010_train',
-    'activeloop/beans_train']
+    'mnist', 
+    'cifar10_train', 
+    'cifar100_train', 
+    'omniglot_test',
+    'objectron_camera',
+    'lm1b',
+    'twitter_airline',
+    'CoLA',
+    'dota',
+    'kitti_train',
+    'deep_weeds_train',
+    'voc_2012_train',
+    'food101_train',
+    'cars196_test',
+    'eurosat_train',
+    'coil100_train',
+    'caltech_birds2010_train',
+    'beans_train']
 
 datasets = st.multiselect("Dataset", options)
 
@@ -57,7 +57,8 @@ if datasets:
     if subset != 0:
         st.write('Slicing', subset)
         tag = "mynameisvinn/{}-{}".format(uuid.uuid1(), subset)
-        if peek(src=datasets[0], dst=tag, k=subset):
+        d = 'activeloop/' + datasets[0]
+        if peek(src=d, dst=tag, k=subset):
             st.write("Code snippet")
             body = f"""
                 import hub            
