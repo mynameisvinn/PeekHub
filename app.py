@@ -57,22 +57,30 @@ options = [
 
 datasets = st.multiselect("Dataset", options)
 
-st.write("Code snippet")
-
 if datasets:
     subset = st.slider('Fraction to keep', min_value=0.0, max_value=1.0, value=0.0, step=0.05)
+
     if subset != 0:
         selected_dataset = datasets[0]
-
-        st.write('Slicing', subset)
+        st.write(f'Slicing {subset} of {selected_dataset}')
+        
         tag = "mynameisvinn/{}-{}-{}".format(selected_dataset, uuid.uuid1(), subset)
         src = f'activeloop/{selected_dataset}'
+
         if peek(src=src, dst=tag, k=subset):
-            st.write("Code snippet")
-            body = f"""
-                import hub            
-                ds = hub.load('{tag}')
-                """.format(tag)
+            st.write("Fetch dataset from Hub")
+            body = f"""import hub \nds = hub.load('{tag}')""".format(tag)
             st.code(body, language='python')
+        
+            ds = hub.load(f'{src}')
+            keys = ds.schema.dict_
+            code = ""
+
+            for k in keys:
+                snippet = "{}s = ds['{}'].compute()".format(k, k)
+                code += snippet
+                code += '\n'
+            st.code(code, language='python')
+
         else:
-            st.write("Slicing failed.")
+            st.write("Slicing failed, sorry!")
